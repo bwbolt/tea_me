@@ -15,11 +15,10 @@ class Api::V1::CustomersController < ApplicationController
 
   # POST /customers
   def create
-    binding.pry
     @customer = Customer.new(customer_params)
 
     if @customer.save
-      render json: @customer, status: :created, location: @customer
+      render json: CustomerSerializer.new(@customer), status: :created
     else
       render json: @customer.errors, status: :unprocessable_entity
     end
