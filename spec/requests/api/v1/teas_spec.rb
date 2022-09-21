@@ -12,116 +12,64 @@ require 'rails_helper'
 # of tools you can use to make these specs even more expressive, but we're
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 
-RSpec.describe "/teas", type: :request do
-  # This should return the minimal set of attributes required to create a valid
-  # Tea. As you add validations to Tea, be sure to
-  # adjust the attributes here as well.
-  let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
-  }
+RSpec.describe '/teas', type: :request do
+  describe 'happy paths' do
+    it '#create' do
+      info = { "title": 'black tea',
+               "description": 'super hype goodness',
+               "brew_details": 'Steep in 45 ml of medium high temp water for 15 minutes' }
 
-  let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
-  }
+      headers = { 'CONTENT_TYPE' => 'application/json' }
 
-  # This should return the minimal set of values that should be in the headers
-  # in order to pass any filters (e.g. authentication) defined in
-  # TeasController, or in your router and rack
-  # middleware. Be sure to keep this updated too.
-  let(:valid_headers) {
-    {}
-  }
+      post '/api/v1/teas', headers: headers, params: JSON.generate(info)
 
-  describe "GET /index" do
-    it "renders a successful response" do
-      Tea.create! valid_attributes
-      get teas_url, headers: valid_headers, as: :json
       expect(response).to be_successful
-    end
-  end
 
-  describe "GET /show" do
-    it "renders a successful response" do
-      tea = Tea.create! valid_attributes
-      get tea_url(tea), as: :json
+      parsed_body = JSON.parse(response.body, symbolize_names: true)
+
+      expect(parsed_body).to have_key(:data)
+      expect(parsed_body[:data]).to be_a Hash
+
+      tea = parsed_body[:data]
+
+      expect(tea).to have_key :id
+      expect(tea[:id]).to be_a String
+      expect(tea).to have_key :type
+      expect(tea[:type]).to eq('tea')
+
+      expect(tea).to have_key :attributes
+
+      expect(tea[:attributes]).to have_key :title
+      expect(tea[:attributes][:title]).to be_a String
+      expect(tea[:attributes]).to have_key :description
+      expect(tea[:attributes][:description]).to be_a String
+      expect(tea[:attributes]).to have_key :brew_details
+      expect(tea[:attributes][:brew_details]).to be_a String
+    end
+    it '#index' do
+      tea1 = Tea.create!(title: 'Black Tea', description: 'super hype goodness', brew_details: 'Do the thing')
+      tea2 = Tea.create!(title: 'Green Tea', description: 'sorta hype goodness', brew_details: 'Do the other thing')
+
+      get '/api/v1/teas'
+
       expect(response).to be_successful
-    end
-  end
 
-  describe "POST /create" do
-    context "with valid parameters" do
-      it "creates a new Tea" do
-        expect {
-          post teas_url,
-               params: { tea: valid_attributes }, headers: valid_headers, as: :json
-        }.to change(Tea, :count).by(1)
-      end
+      parsed_body = JSON.parse(response.body, symbolize_names: true)
 
-      it "renders a JSON response with the new tea" do
-        post teas_url,
-             params: { tea: valid_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:created)
-        expect(response.content_type).to match(a_string_including("application/json"))
-      end
-    end
+      expect(parsed_body).to have_key(:data)
+      expect(parsed_body[:data]).to be_a Array
+      expect(parsed_body[:data].length).to eq 2
 
-    context "with invalid parameters" do
-      it "does not create a new Tea" do
-        expect {
-          post teas_url,
-               params: { tea: invalid_attributes }, as: :json
-        }.to change(Tea, :count).by(0)
-      end
+      tea = parsed_body[:data][0]
 
-      it "renders a JSON response with errors for the new tea" do
-        post teas_url,
-             params: { tea: invalid_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to match(a_string_including("application/json"))
-      end
-    end
-  end
+      expect(tea).to have_key :attributes
 
-  describe "PATCH /update" do
-    context "with valid parameters" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
-
-      it "updates the requested tea" do
-        tea = Tea.create! valid_attributes
-        patch tea_url(tea),
-              params: { tea: new_attributes }, headers: valid_headers, as: :json
-        tea.reload
-        skip("Add assertions for updated state")
-      end
-
-      it "renders a JSON response with the tea" do
-        tea = Tea.create! valid_attributes
-        patch tea_url(tea),
-              params: { tea: new_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:ok)
-        expect(response.content_type).to match(a_string_including("application/json"))
-      end
-    end
-
-    context "with invalid parameters" do
-      it "renders a JSON response with errors for the tea" do
-        tea = Tea.create! valid_attributes
-        patch tea_url(tea),
-              params: { tea: invalid_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to match(a_string_including("application/json"))
-      end
-    end
-  end
-
-  describe "DELETE /destroy" do
-    it "destroys the requested tea" do
-      tea = Tea.create! valid_attributes
-      expect {
-        delete tea_url(tea), headers: valid_headers, as: :json
-      }.to change(Tea, :count).by(-1)
+      expect(tea[:attributes]).to have_key :title
+      expect(tea[:attributes][:title]).to be_a String
+      expect(tea[:attributes]).to have_key :description
+      expect(tea[:attributes][:description]).to be_a String
+      expect(tea[:attributes]).to have_key :brew_details
+      expect(tea[:attributes][:brew_details]).to be_a String
     end
   end
 end
