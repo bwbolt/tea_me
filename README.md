@@ -172,7 +172,7 @@ RESPONSE:
 
 
 
-# Teas
+# Tea
 
 
 **Create Tea**
