@@ -2,18 +2,30 @@ class Api::V1::SubscriptionsController < ApplicationController
   before_action :set_subscription, only: [:destroy]
 
   def create
-    @subscription = Subscription.new(subscription_params)
+    customer = Customer.find(params[:customer_id])
+    @subscription = customer.subscriptions.find_by(tea_id: params[:tea_id])
 
-    if @subscription.save
-      render json: SubscriptionSerializer.new(@subscription), status: :created
+    if @subscription.nil?
+
+      @subscription = Subscription.new(subscription_params)
+
+      if @subscription.save
+        render json: SubscriptionSerializer.new(@subscription), status: :created
+      else
+        render json: @subscription.errors, status: :unprocessable_entity
+      end
+
     else
-      render json: @subscription.errors, status: :unprocessable_entity
+      @subscription[:active] = 'Active'
+      @subscription.save
+      render json: SubscriptionSerializer.new(@subscription), status: :accepted
     end
   end
 
   def destroy
     @subscription[:active] = 'Inactive'
     @subscription.save
+    render json: SubscriptionSerializer.new(@subscription), status: :accepted
   end
 
   private
