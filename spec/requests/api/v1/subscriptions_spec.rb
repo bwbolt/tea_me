@@ -14,7 +14,7 @@ RSpec.describe '/subscriptions', type: :request do
 
       headers = { 'CONTENT_TYPE' => 'application/json' }
 
-      post '/api/v1/subscriptions', headers: headers, params: JSON.generate(info)
+      post '/api/v1/subscribe', headers: headers, params: JSON.generate(info)
 
       expect(response).to be_successful
 
@@ -53,7 +53,7 @@ RSpec.describe '/subscriptions', type: :request do
 
       info = { "id": "#{subscription.id}" }
 
-      delete '/api/v1/subscription', headers: headers, params: info
+      delete '/api/v1/unsubscribe', headers: headers, params: info
 
       expect(Subscription.first[:active]).to eq('Inactive')
     end

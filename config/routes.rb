@@ -4,8 +4,8 @@ Rails.application.routes.draw do
       resources :teas, only: %i[create index]
       resources :customers, only: %i[create index]
       get '/customer', to: 'customers#show'
-      resources :subscriptions, only: %i[create]
-      delete '/subscription', to: 'subscriptions#destroy'
+      post '/subscribe', to: 'subscriptions#create'
+      delete '/unsubscribe', to: 'subscriptions#destroy'
     end
   end
 end
