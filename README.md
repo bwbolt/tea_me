@@ -6,6 +6,8 @@
 
 - Available Endpoints:
   - [Customer Endpoints](#CUSTOMER)
+  - [Tea Endpoints](#TEA)
+  - [Subscription Endpoints](#SUBSCRIPTION)
 
 
 
@@ -243,272 +245,85 @@ RESPONSE:
 ```
 ---
 
-**Garden Show**
+# Subscription
 
-- This endpoint returns a particular garden
+
+**Create Subscription**
+
+- This endpoint creates a subscription for a customer
 	
 
 ``` ruby
-[GET] /api/v1/users/:user_id/gardens
-```
+[POST]  /api/v1/subscribe
 
 
-RESPONSE:
-
-```json
-{
-	"data": {
-		"id": "2",
-		"type": "garden",
-		"attributes": {
-			"name": "Summer Garden",
-			"cardinal_direction": "South",
-			"notes": "it's too damn hot"
-		}
-	}
-}
-```
----
-**Garden Destroy**
-
-- This endpoint destroys a particular garden
-	
-
-``` ruby
-[DELETE] /api/v1/users/:user_id/gardens/:id
-```
-
-
-RESPONSE:
-
-```json
-No Response
-```
----
-**Garden Update**
-
-- This endpoint updates a particular garden
-	
-
-``` ruby
-[PATCH] /api/v1/users/:user_id/gardens/:id
+Required Body: 
+  {"frequency": "30",
+"customer_id": "1",
+"tea_id": "4"}
 ```
 
  Example:
 
 ``` ruby 
-[PATCH] /api/v1/users/:user_id/gardens/:id
+[POST]   /api/v1/subscribe
 
-
- - Params: 
-	 - _json : "{\"name\":\"Summer Garden\",\"notes\":\"it's too damn hot\",\"cardinal_direction\":1}"
+ - Body: 
+	   {"frequency": "30",
+"customer_id": "1",
+"tea_id": "4"}
 ```
 
 RESPONSE:
 
 ```json
 {
-	"data": {
-		"id": "2",
-		"type": "garden",
-		"attributes": {
-			"name": "Summer Garden",
-			"cardinal_direction": "South",
-			"notes": "it's too damn hot"
-		}
-	}
+    "data": {
+        "id": "4",
+        "type": "subscription",
+        "attributes": {
+            "active": "Active",
+            "frequency": 30,
+            "customer_id": 1,
+            "tea_id": 4
+        }
+    }
 }
 ```
 ---
 
 
+**Unsubscribe**
 
-# Plant
-
-
-**Create Plant**
-
-- This endpoint creates a garden for a user 
+- This endpoint unsubscribes a customer from a subscription
 	
 
 ``` ruby
-[POST]  /api/v1/users/:user_id/gardens/:garden_id/plants
+[GET] /api/v1/unsubscribe
 
-
-Required PARAMS: 
- - _json: plant_data.to_json
-```
-
- Example:
-
-``` ruby 
-[POST]  /api/v1/users/:user_id/gardens/:garden_id/plants
-
- - Params: 
-	 - _json: "{\"user_id\":\"1\",\"garden_id\":\"1\",\"name\":\"Carrot\",\"plant_id\":\"sae2340987dage\"}"
+Required Body: 
+  {"id": "4"}
 ```
 
 RESPONSE:
 
 ```json
 {
-	"data": {
-		"id": "2",
-		"type": "plant",
-		"attributes": {
-			"name": "Carrot",
-			"plant_id": "sae2340987dage",
-			"date_planted": null,
-			"moon_phase": null,
-			"date_matured": null,
-			"bounty_amount": null,
-			"pruning_behaviors": null,
-			"notes": null,
-			"garden_id": 1
-		}
-	}
+    "data": {
+        "id": "4",
+        "type": "subscription",
+        "attributes": {
+            "active": "Inactive",
+            "frequency": 30,
+            "customer_id": 1,
+            "tea_id": 4
+        }
+    }
 }
 ```
 ---
 
 
-**Garden Plants**
-
-- This endpoint returns all the plants for a garden
-	
-
-``` ruby
-[GET] /api/v1/users/:user_id/gardens/:garden_id/plants
-```
-
-RESPONSE:
-
-```json
-{
-	"data": [
-		{
-			"id": "1",
-			"type": "plant",
-			"attributes": {
-				"name": "Carrot",
-				"plant_id": "sae2340987dage",
-				"date_planted": null,
-				"moon_phase": null,
-				"date_matured": null,
-				"bounty_amount": null,
-				"pruning_behaviors": null,
-				"notes": null,
-				"garden_id": 1
-			}
-		},
-		{
-			"id": "2",
-			"type": "plant",
-			"attributes": {
-				"name": "Carrot",
-				"plant_id": "sae2340987dage",
-				"date_planted": null,
-				"moon_phase": null,
-				"date_matured": null,
-				"bounty_amount": null,
-				"pruning_behaviors": null,
-				"notes": null,
-				"garden_id": 1
-			}
-		}
-	]
-
-}
-```
----
-
-**Plant Show**
-
-- This endpoint returns a particular plant
-	
-
-``` ruby
-[GET] /api/v1/users/:user_id/gardens/:garden_id/plants/:id
-```
-
-RESPONSE:
-
-```json
-{
-	"data": {
-		"id": "2",
-		"type": "plant",
-		"attributes": {
-			"name": "Carrot",
-			"plant_id": "sae2340987dage",
-			"date_planted": null,
-			"moon_phase": null,
-			"date_matured": null,
-			"bounty_amount": null,
-			"pruning_behaviors": null,
-			"notes": null,
-			"garden_id": 1
-		}
-	}
-}
-```
----
-**Plant Destroy**
-
-- This endpoint destroys a particular plant
-	
-
-``` ruby
-[DELETE] /api/v1/users/:user_id/gardens/:garden_id/plants/:id
-```
-
-RESPONSE:
-
-```json
-No Response
-```
----
-**Plant Update**
-
-- This endpoint updates a particular plant
-	
-
-``` ruby
-[PATCH] /api/v1/users/:user_id/gardens/:garden_id/plants/:id
-```
-
- Example:
-
-``` ruby 
-[PATCH] /api/v1/users/:user_id/gardens/:garden_id/plants/:id
-
-
- - Params: 
-	 - _json : "{\"moon_phase\":\"Full\"}"
-```
-
-RESPONSE:
-
-```json
-{
-	"data": {
-		"id": "2",
-		"type": "plant",
-		"attributes": {
-			"name": "Carrot",
-			"plant_id": "sae2340987dage",
-			"date_planted": null,
-			"moon_phase": "Full",
-			"date_matured": null,
-			"bounty_amount": null,
-			"pruning_behaviors": null,
-			"notes": null,
-			"garden_id": 1
-		}
-	}
-}
-```
----
 
 # Feel like contributing??
 
