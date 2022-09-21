@@ -10,7 +10,7 @@ class Api::V1::CustomersController < ApplicationController
 
   # GET /customer
   def show
-    render json: @customer
+    render json: CustomerSerializer.new(@customer)
   end
 
   # POST /customers

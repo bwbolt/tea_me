@@ -28,6 +28,15 @@ RSpec.describe '/customers', type: :request do
       expect(customer).to have_key :type
       expect(customer[:type]).to eq('customer')
 
+      expect(customer).to have_key :relationships
+      expect(customer[:relationships]).to be_a Hash
+
+      expect(customer[:relationships]).to have_key :subscriptions
+      expect(customer[:relationships][:subscriptions]).to be_a Hash
+
+      expect(customer[:relationships][:subscriptions]).to have_key :data
+      expect(customer[:relationships][:subscriptions][:data]).to be_a Array
+
       expect(customer).to have_key :attributes
 
       expect(customer[:attributes]).to have_key :first_name
