@@ -49,13 +49,13 @@ RSpec.describe '/subscriptions', type: :request do
 
       subscription = Subscription.create!(frequency: 30, customer_id: customer.id, tea_id: tea.id)
 
-      expect(Subscription.all.length).to eq(1)
+      expect(Subscription.first[:active]).to eq('Active')
 
       info = { "id": "#{subscription.id}" }
 
       delete '/api/v1/subscription', headers: headers, params: info
 
-      expect(Subscription.all.length).to eq(0)
+      expect(Subscription.first[:active]).to eq('Inactive')
     end
   end
 end

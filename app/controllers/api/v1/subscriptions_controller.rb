@@ -12,7 +12,8 @@ class Api::V1::SubscriptionsController < ApplicationController
   end
 
   def destroy
-    @subscription.destroy
+    @subscription[:active] = 'Inactive'
+    @subscription.save
   end
 
   private
