@@ -1,3 +1,6 @@
+<p align="center">
+<img width="445" alt="Screen Shot 2022-09-21 at 12 52 42 PM" src="https://user-images.githubusercontent.com/85247765/191565062-85631a63-2b96-43e2-b9f3-22677f08e441.png">
+	</p>
 
 
 # API Usage
@@ -338,7 +341,7 @@ RESPONSE:
 
 ```
 
-$ git clone git@github.com:Moon-Garden/moon_garden_be.git
+$ git clone git@github.com:bwbolt/tea_me.git
 
 ```
 
