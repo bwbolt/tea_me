@@ -329,9 +329,7 @@ RESPONSE:
 
 
 
-<img src="https://user-images.githubusercontent.com/85247765/182939845-58e20d6b-c710-4fc5-8ea3-c4345f38025d.png" width="600" height="300">
-Note: "plant_id" in the plant table is referencing the id from an outside api.
-
+![Screen Shot 2022-09-21 at 12 46 48 PM](https://user-images.githubusercontent.com/85247765/191563814-b85ea42e-2070-4333-ae45-579b1de9c153.png)
 
 
 ## Installation
