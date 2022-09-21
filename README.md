@@ -70,7 +70,7 @@ RESPONSE:
 ---
 
 
-**Find User**
+**Find Customer**
 
 - This endpoint finds an existing user, based on user id
 
@@ -122,58 +122,105 @@ RESPONSE:
 ```
 ---
 
+**All Customers**
 
-
-# Garden
-
-
-**Create Garden**
-
-- This endpoint creates a garden for a user 
-	
+- This endpoint finds an existing user, based on user id
 
 ``` ruby
-[POST] /api/v1/users/:id/gardens
+[GET] /api/v1/customers
 
-
-Required PARAMS: 
- - _json: user_data.to_json
 ```
+
+
 
  Example:
 
 ``` ruby 
-[POST] /api/v1/users/:id/gardens
+[POST] /api/v1/customers
 
- - Params: 
-	 - _json : "{\"user_id\":1,\"name\":\"Summer Garden\",\"notes\":\"it's too damn hot\",\"cardinal_direction\":1}"
 ```
 
 RESPONSE:
 
 ```json
 {
-	"data": {
-		"id": "2",
-		"type": "garden",
-		"attributes": {
-			"name": "Summer Garden",
-			"cardinal_direction": "South",
-			"notes": "it's too damn hot"
-		}
-	}
+    "data": [
+        {
+            "id": "1",
+            "type": "customer",
+            "attributes": {
+                "first_name": "Bryce",
+                "last_name": "Wein",
+                "email": "bryce.wein@gmail.com",
+                "address": "816 Shetland Drive Chesapeake Va 23322"
+            },
+            "relationships": {
+                "subscriptions": {
+                    "data": []
+                }
+            }
+        }
+    ]
 }
 ```
 ---
 
 
-**User Gardens**
 
-- This endpoint returns all the gardens for a user
+# Teas
+
+
+**Create Tea**
+
+- This endpoint creates a tea
 	
 
 ``` ruby
-[GET] /api/v1/users/:user_id/gardens
+[POST] /api/v1/teas
+
+
+Required BODY: 
+ - {"title": "Black Tea",
+"description": "super hype goodness",
+"brew_details": "Steep in 45 ml of medium high temp water for 15 minutes"}
+```
+
+ Example:
+
+``` ruby 
+[POST] /api/v1/teas
+
+ - Body: 
+	 {"title": "Black Tea",
+"description": "super hype goodness",
+"brew_details": "Steep in 45 ml of medium high temp water for 15 minutes"}
+```
+
+RESPONSE:
+
+```json
+{
+    "data": {
+        "id": "4",
+        "type": "tea",
+        "attributes": {
+            "title": "Black Tea",
+            "description": "super hype goodness",
+            "brew_details": "Steep in 45 ml of medium high temp water for 15 minutes"
+        }
+    }
+}
+```
+---
+
+
+**See all Teas**
+
+- This endpoint returns all the teas 
+	
+
+``` ruby
+[GET] /api/v1/teas
 ```
 
 
@@ -181,26 +228,17 @@ RESPONSE:
 
 ```json
 {
-	"data": [
-		{
-			"id": "1",
-			"type": "garden",
-			"attributes": {
-				"name": "Summer Garden",
-				"cardinal_direction": "South",
-				"notes": "it's too damn hot"
-			}
-		},
-		{
-			"id": "2",
-			"type": "garden",
-			"attributes": {
-				"name": "Summer Garden",
-				"cardinal_direction": "South",
-				"notes": "it's too damn hot"
-			}
-		}
-	]
+    "data": [
+        {
+            "id": "4",
+            "type": "tea",
+            "attributes": {
+                "title": "Black Tea",
+                "description": "super hype goodness",
+                "brew_details": "Steep in 45 ml of medium high temp water for 15 minutes"
+            }
+        }
+    ]
 }
 ```
 ---
