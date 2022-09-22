@@ -58,4 +58,70 @@ RSpec.describe '/subscriptions', type: :request do
       expect(Subscription.first[:active]).to eq('Inactive')
     end
   end
+
+  describe 'sad paths' do
+    describe '#create' do
+      it 'missing data (frequency)' do
+        customer = Customer.create!(first_name: 'Bryce', last_name: 'Wein', email: 'bryce.wein@gmail.com',
+                                    address: '816 shetland drive')
+
+        tea = Tea.create!(title: 'Black Tea', description: 'super hype goodness',
+                          brew_details: 'Do the thing')
+        info = {
+          "customer_id": "#{customer.id}",
+          "tea_id": "#{tea.id}"
+        }
+
+        headers = { 'CONTENT_TYPE' => 'application/json' }
+
+        post '/api/v1/subscribe', headers: headers, params: JSON.generate(info)
+
+        expect(response).to_not be_successful
+
+        parsed_body = JSON.parse(response.body, symbolize_names: true)
+
+        expect(parsed_body).to eq({ frequency: ["can't be blank"] })
+      end
+
+      it 'missing data (customer_id)' do
+        customer = Customer.create!(first_name: 'Bryce', last_name: 'Wein', email: 'bryce.wein@gmail.com',
+                                    address: '816 shetland drive')
+
+        tea = Tea.create!(title: 'Black Tea', description: 'super hype goodness',
+                          brew_details: 'Do the thing')
+        info = { "frequency": '30',
+                 "tea_id": "#{tea.id}" }
+
+        headers = { 'CONTENT_TYPE' => 'application/json' }
+
+        post '/api/v1/subscribe', headers: headers, params: JSON.generate(info)
+
+        expect(response).to_not be_successful
+
+        parsed_body = JSON.parse(response.body, symbolize_names: true)
+
+        expect(parsed_body).to eq({ customer_id: ["can't be blank"] })
+      end
+
+      it 'missing data (tea_id)' do
+        customer = Customer.create!(first_name: 'Bryce', last_name: 'Wein', email: 'bryce.wein@gmail.com',
+                                    address: '816 shetland drive')
+
+        tea = Tea.create!(title: 'Black Tea', description: 'super hype goodness',
+                          brew_details: 'Do the thing')
+        info = { "frequency": '30',
+                 "customer_id": "#{customer.id}" }
+
+        headers = { 'CONTENT_TYPE' => 'application/json' }
+
+        post '/api/v1/subscribe', headers: headers, params: JSON.generate(info)
+
+        expect(response).to_not be_successful
+
+        parsed_body = JSON.parse(response.body, symbolize_names: true)
+
+        expect(parsed_body).to eq({ tea: ['must exist'] })
+      end
+    end
+  end
 end
