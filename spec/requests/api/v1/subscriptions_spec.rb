@@ -123,5 +123,49 @@ RSpec.describe '/subscriptions', type: :request do
         expect(parsed_body).to eq({ tea: ['must exist'] })
       end
     end
+    describe '#destroy' do
+      it 'missing data (subscription id)' do
+        customer = Customer.create!(first_name: 'Bryce', last_name: 'Wein', email: 'bryce.wein@gmail.com',
+                                    address: '816 shetland drive')
+
+        tea = Tea.create!(title: 'Black Tea', description: 'super hype goodness',
+                          brew_details: 'Do the thing')
+
+        subscription = Subscription.create!(frequency: 30, customer_id: customer.id, tea_id: tea.id)
+
+        expect(Subscription.first[:active]).to eq('Active')
+
+        info = { "useless_info": 'yep' }
+
+        delete '/api/v1/unsubscribe', headers: headers, params: info
+
+        expect(response).to_not be_successful
+
+        parsed_body = JSON.parse(response.body, symbolize_names: true)
+
+        expect(parsed_body).to eq({ id: ["can't be blank"] })
+      end
+      it 'missing data (unknown id)' do
+        customer = Customer.create!(first_name: 'Bryce', last_name: 'Wein', email: 'bryce.wein@gmail.com',
+                                    address: '816 shetland drive')
+
+        tea = Tea.create!(title: 'Black Tea', description: 'super hype goodness',
+                          brew_details: 'Do the thing')
+
+        subscription = Subscription.create!(frequency: 30, customer_id: customer.id, tea_id: tea.id)
+
+        expect(Subscription.first[:active]).to eq('Active')
+
+        info = { "id": "#{subscription.id + 1}" }
+
+        delete '/api/v1/unsubscribe', headers: headers, params: info
+
+        expect(response).to_not be_successful
+
+        parsed_body = JSON.parse(response.body, symbolize_names: true)
+
+        expect(parsed_body).to eq({ id: ['does not exist'] })
+      end
+    end
   end
 end

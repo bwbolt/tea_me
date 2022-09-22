@@ -36,7 +36,16 @@ class Api::V1::SubscriptionsController < ApplicationController
   private
 
   def set_subscription
-    @subscription = Subscription.find(params[:id])
+    if params[:id]
+      if Subscription.exists?(params[:id])
+        @subscription = Subscription.find(params[:id])
+      else
+        render json: { id: ['does not exist'] }, status: :unprocessable_entity
+      end
+    else
+      render json: { id: ["can't be blank"] }, status: :unprocessable_entity
+
+    end
   end
 
   def subscription_params
