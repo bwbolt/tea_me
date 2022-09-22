@@ -60,4 +60,53 @@ RSpec.describe '/teas', type: :request do
       expect(tea[:attributes][:brew_details]).to be_a String
     end
   end
+
+  describe 'sad paths' do
+    describe '#create' do
+      it 'missing data (title)' do
+        info = {
+          "description": 'super hype goodness',
+          "brew_details": 'Steep in 45 ml of medium high temp water for 15 minutes'
+        }
+
+        headers = { 'CONTENT_TYPE' => 'application/json' }
+
+        post '/api/v1/teas', headers: headers, params: JSON.generate(info)
+
+        expect(response).to_not be_successful
+
+        parsed_body = JSON.parse(response.body, symbolize_names: true)
+
+        expect(parsed_body).to eq({ title: ["can't be blank"] })
+      end
+      it 'missing data (description)' do
+        info = { "title": 'black tea',
+                 "brew_details": 'Steep in 45 ml of medium high temp water for 15 minutes' }
+
+        headers = { 'CONTENT_TYPE' => 'application/json' }
+
+        post '/api/v1/teas', headers: headers, params: JSON.generate(info)
+
+        expect(response).to_not be_successful
+
+        parsed_body = JSON.parse(response.body, symbolize_names: true)
+
+        expect(parsed_body).to eq({ description: ["can't be blank"] })
+      end
+      it 'missing data (brew_details)' do
+        info = { "title": 'black tea',
+                 "description": 'super hype goodness' }
+
+        headers = { 'CONTENT_TYPE' => 'application/json' }
+
+        post '/api/v1/teas', headers: headers, params: JSON.generate(info)
+
+        expect(response).to_not be_successful
+
+        parsed_body = JSON.parse(response.body, symbolize_names: true)
+
+        expect(parsed_body).to eq({ brew_details: ["can't be blank"] })
+      end
+    end
+  end
 end
